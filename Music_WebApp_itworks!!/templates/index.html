@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Downloader</title>
+</head>
+<body>
+    <h1>Download Songs</h1>
+    <form id="songForm" method="POST">
+        <label for="song_name">Enter Song Name:</label>
+        <input type="text" id="song_name" name="song_name" required>
+        <button type="submit">Download</button>
+    </form>
+    <p id="message"></p>
+
+    <script>
+        document.getElementById('songForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent form from reloading the page
+
+            const songName = document.getElementById('song_name').value;
+            const messageElement = document.getElementById('message');
+
+            // Show "Downloading song: SONG_NAME" message
+            messageElement.innerText = `Downloading song: ${songName}...`;
+
+            try {
+                // Make a POST request to initiate the song download
+                const response = await fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ song_name: songName })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // Automatically trigger the browser to download the file
+                    const downloadUrl = `/download/${encodeURIComponent(result.file_name)}`;
+                    window.location.href = downloadUrl; // Redirect to the download URL
+                    messageElement.innerText = `Your download of "${songName}" is starting...`;
+                } else {
+                    messageElement.innerText = result.message;
+                }
+            } catch (error) {
+                messageElement.innerText = "An error occurred while downloading the song. Please try again.";
+            }
+        });
+    </script>
+</body>
+</html>
