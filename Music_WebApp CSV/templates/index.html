@@ -7,12 +7,58 @@
 </head>
 <body>
     <h1>Download Songs</h1>
+    <form id="songForm" method="POST">
+        <label for="song_name">Enter Song Name:</label>
+        <input type="text" id="song_name" name="song_name" required>
+        <button type="submit">Download</button>
+    </form>
+    <p id="message"></p>
+
+    <script>
+        document.getElementById('songForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent form from reloading the page
+
+            const songName = document.getElementById('song_name').value;
+            const messageElement = document.getElementById('message');
+
+            // Show "Downloading song: SONG_NAME" message
+            messageElement.innerText = `Downloading song: ${songName}...`;
+
+            try {
+                // Make a POST request to initiate the song download
+                const response = await fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ song_name: songName })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // Automatically trigger the browser to download the file
+                    const downloadUrl = `/download/${encodeURIComponent(result.file_name)}`;
+                    window.location.href = downloadUrl; // Redirect to the download URL
+                    messageElement.innerText = `Your download of "${songName}" is starting...`;
+                } else {
+                    messageElement.innerText = result.message;
+                }
+            } catch (error) {
+                messageElement.innerText = "An error occurred while downloading the song. Please try again.";
+            }
+        });
+    </script>
+    <br>
+    <hr>
+    <h2>Upload a CSV with "Track Name" and "Artist Name(s)"</h2>
+    <h3>Make sure that these 2 columns are there with exact names</h3>
     <form id="csvForm" method="POST" enctype="multipart/form-data">
         <label for="csv_file">Upload CSV File:</label>
         <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
         <button type="submit">Upload and Download</button>
     </form>
-    <p id="message"></p>
+    <p id="csvMessage"></p>
 
     <script>
         document.getElementById('csvForm').addEventListener('submit', async function (event) {
@@ -21,8 +67,8 @@
             const formData = new FormData();
             formData.append('csv_file', document.getElementById('csv_file').files[0]);
 
-            const messageElement = document.getElementById('message');
-            messageElement.innerText = "Processing CSV and downloading songs...";
+            const csvMessageElement = document.getElementById('csvMessage');
+            csvMessageElement.innerText = "Processing CSV and downloading songs...";
 
             try {
                 const response = await fetch('/', {
@@ -34,13 +80,17 @@
                 if (Array.isArray(result)) {
                     result.forEach(song => {
                         const status = song.status === 'success' ? '✔' : '❌';
-                        messageElement.innerHTML += `<p>${status} ${song.song}: ${song.message}</p>`;
+                        csvMessageElement.innerHTML += `<p>${status} ${song.track_name} by ${song.artist_name}: ${song.message}</p>`;
                     });
+
+                    // Trigger the zip download
+                    const zipUrl = '/download/all-songs.zip';
+                    csvMessageElement.innerHTML += `<p><a href="${zipUrl}" download>Click here to download all songs as a ZIP</a></p>`;
                 } else {
-                    messageElement.innerText = result.message;
+                    csvMessageElement.innerText = result.message;
                 }
             } catch (error) {
-                messageElement.innerText = "An error occurred. Please try again.";
+                csvMessageElement.innerText = "An error occurred. Please try again.";
             }
         });
     </script>
