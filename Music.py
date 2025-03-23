@@ -1,7 +1,7 @@
 import os
 import yt_dlp
 
-def download_song(song_name, download_folder, ffmpeg_location=None):
+def download_song(song_name, download_folder, ffmpeg_location="/usr/bin/ffmpeg"):
     try:
         # Configure yt_dlp options
         ydl_opts = {
@@ -33,8 +33,9 @@ def main():
         return
     
     # Prompt user for download folder
+    download_folder="/home/milind/Downloads"
     #download_folder = input("Enter the download folder path: ").strip()
-    download_folder="C:\\Users\\Milind\\Music\\Downloaded"
+
     download_folder=download_folder.strip()
     if not os.path.isdir(download_folder):
         print("Error: Invalid folder path.")

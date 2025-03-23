@@ -25,7 +25,7 @@ def download_song():
             }],
             'outtmpl': f'{download_folder}/%(title)s.%(ext)s',
             'quiet': False,
-            'ffmpeg_location': r'C:\\Users\\Milind\\AppData\\Local\\Microsoft\WinGet\\Packages\\Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-7.1-essentials_build\bin'  # Replace with the actual path to FFmpeg
+            'ffmpeg_location': '/usr/bin/ffmpeg'  # Path to FFmpeg on Linux
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
