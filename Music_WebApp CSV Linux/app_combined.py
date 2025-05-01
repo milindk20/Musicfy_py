@@ -4,21 +4,15 @@ import os
 import csv
 import yt_dlp
 from werkzeug.utils import secure_filename  # Import for filename sanitization
+from config import DOWNLOAD_FOLDER, FFMPEG_LOCATION  # Import configuration
 
 app = Flask(__name__)
-
-# Path to save downloaded songs
-DOWNLOAD_FOLDER = r"/home/milind/Downloads/Music"
-FFMPEG_LOCATION = r'/usr/bin/ffmpeg'
-
-# Ensure the download folder exists
-os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 def download_song(search_query):
     try:
         # Define the output template
         original_outtmpl = "musicDownloaded_"+datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
-        sanitized_outtmpl = secure_filename(original_outtmpl)        
+        sanitized_outtmpl = secure_filename(original_outtmpl)
         outtmpl = os.path.join(DOWNLOAD_FOLDER, sanitized_outtmpl)
         print(original_outtmpl,sanitized_outtmpl, outtmpl)
         ydl_opts = {
