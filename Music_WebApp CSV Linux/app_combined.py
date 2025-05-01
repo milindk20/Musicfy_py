@@ -1,12 +1,14 @@
+from datetime import datetime
 from flask import Flask, request, render_template, jsonify, send_from_directory
 import os
 import csv
 import yt_dlp
+from werkzeug.utils import secure_filename  # Import for filename sanitization
 
 app = Flask(__name__)
 
 # Path to save downloaded songs
-DOWNLOAD_FOLDER = r"/home/milind/Downloads"
+DOWNLOAD_FOLDER = r"/home/milind/Downloads/Music"
 FFMPEG_LOCATION = r'/usr/bin/ffmpeg'
 
 # Ensure the download folder exists
@@ -14,6 +16,11 @@ os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 def download_song(search_query):
     try:
+        # Define the output template
+        original_outtmpl = "musicDownloaded_"+datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
+        sanitized_outtmpl = secure_filename(original_outtmpl)        
+        outtmpl = os.path.join(DOWNLOAD_FOLDER, sanitized_outtmpl)
+        print(original_outtmpl,sanitized_outtmpl, outtmpl)
         ydl_opts = {
             'format': 'bestaudio/best',
             'postprocessors': [{
@@ -21,14 +28,23 @@ def download_song(search_query):
                 'preferredcodec': 'mp3',
                 'preferredquality': '192',
             }],
-            'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
+            'outtmpl': outtmpl,
             'quiet': False,
             'ffmpeg_location': FFMPEG_LOCATION
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(f"ytsearch:{search_query}", download=True)
-            file_path = os.path.join(DOWNLOAD_FOLDER, f"{info['entries'][0]['title']}.mp3")
-            return file_path, f"{info['entries'][0]['title']}.mp3"
+            # Determine the final file path
+            file_path = os.path.join(DOWNLOAD_FOLDER, f"{secure_filename(info['entries'][0]['title'])}.mp3")
+            print(file_path)
+            # rename outtmpl to file_path
+            if os.path.exists(outtmpl+".mp3"):
+                print(outtmpl+".mp3")
+                print("exists")
+                os.rename(outtmpl+".mp3", file_path)
+            else:
+                print(f"File {outtmpl+".mp3"} does not exist.")
+            return file_path, f"{secure_filename(info['entries'][0]['title'])}.mp3"
     except Exception as e:
         return None, f"Error: {e}"
 
