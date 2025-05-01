@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from Musicfy.config import DOWNLOAD_FOLDER  # type: ignore
 
 # Path to the download folder
-DOWNLOAD_FOLDER = r"/home/milind/Downloads/Music"
 
 # Time threshold for file deletion (24 hours in seconds)
 TIME_THRESHOLD = 24 * 60 * 60 * 60  # 24 hours
