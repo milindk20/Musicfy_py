@@ -11,7 +11,7 @@ app = Flask(__name__)
 def download_song(search_query):
     try:
         # Define the output template
-        original_outtmpl = "musicDownloaded_"+datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
+        original_outtmpl = "musicDownloaded_"+datetime.today().strftime("%Y-%m-%d-%H-%M-%S-%f")
         sanitized_outtmpl = secure_filename(original_outtmpl)
         outtmpl = os.path.join(DOWNLOAD_FOLDER, sanitized_outtmpl)
         print(original_outtmpl,sanitized_outtmpl, outtmpl)

@@ -4,7 +4,7 @@ import os
 
 DOWNLOAD_FOLDER = r"/home/milind/Downloads"
 
-original_outtmpl = "musicDownloaded_2025-05-01-20-10-43"
+original_outtmpl = "musicDownloaded_"+datetime.today().strftime("%Y-%m-%d-%H-%M-%S-%f")
 sanitized_outtmpl = secure_filename(original_outtmpl+".mp3")
 outtmpl = os.path.join(DOWNLOAD_FOLDER, sanitized_outtmpl)
 print(original_outtmpl)
