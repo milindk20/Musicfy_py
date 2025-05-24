@@ -2,12 +2,13 @@ from flask import Flask, request, render_template, jsonify, send_from_directory
 import os
 import csv
 import yt_dlp
+from config import DOWNLOAD_FOLDER, FFMPEG_LOCATION  # Import configuration
 
 app = Flask(__name__)
 
 # Path to save downloaded songs
-DOWNLOAD_FOLDER = r"C:\\Users\\Milind\\Music\\Downloaded"
-FFMPEG_LOCATION = r'C:\\Users\\Milind\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-7.1-essentials_build\\bin'
+#DOWNLOAD_FOLDER = r"C:\\Users\\Milind\\Music\\Downloaded"
+#FFMPEG_LOCATION = r'C:\\Users\\Milind\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-7.1-essentials_build\\bin'
 
 # Ensure the download folder exists
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
