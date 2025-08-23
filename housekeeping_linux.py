@@ -1,12 +1,12 @@
 import os
 import time
 from datetime import datetime, timedelta
-from Musicfy_Linux.config import DOWNLOAD_FOLDER  # type: ignore
+from Linux.config import DOWNLOAD_FOLDER  # type: ignore
 
 # Path to the download folder
 
 # Time threshold for file deletion (24 hours in seconds)
-TIME_THRESHOLD = 24 * 60 * 60 * 60  # 24 hours
+TIME_THRESHOLD = 24 #* 60 * 60 * 60  # 24 hours
 
 def remove_old_files(folder_path, time_threshold):
     try:
