@@ -1,4 +1,3 @@
-start_app.sh 
 #! /bin/bash
 
 
