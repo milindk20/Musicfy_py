@@ -27,6 +27,6 @@ deactivate
 # Copy start_app.sh to /data/
 cp Musicfy_py/Server/start_app.sh /data/
 # Create logs directory
-mkdir /data/logs
+mkdir /data/Musicfy_py/logs
 # Start the application
 bash /data/start_app.sh
