@@ -14,7 +14,7 @@ source py_venv/bin/activate
 
 # Install required Python packages
 pip install --upgrade pip
-pip install -r ../Linux/requirements.txt
+pip install -r /data/Musicfy_py/Linux/requirements.txt
 
 # Set up environment variables (if any)
 # export VAR_NAME=value
