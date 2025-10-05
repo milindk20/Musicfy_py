@@ -1,6 +1,7 @@
 # Musicfy_py
 
 ## set up the environment
-##### python -m venv music_py_env
-##### pip install yt_dlp flask 
+##### git clone https://github.com/milindk20/Musicfy_py.git
+##### bash Musicfy_py/Server/initialize.sh 
+
 
