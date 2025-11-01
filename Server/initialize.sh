@@ -28,5 +28,7 @@ deactivate
 cp Musicfy_py/Server/start_app.sh /data/
 # Create logs directory
 mkdir /data/Musicfy_py/logs
+# change the permission set to execute for start app
+chmod +x /data/start_app.sh
 # Start the application
 bash /data/start_app.sh
