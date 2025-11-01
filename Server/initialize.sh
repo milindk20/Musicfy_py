@@ -30,5 +30,22 @@ cp Musicfy_py/Server/start_app.sh /data/
 mkdir /data/Musicfy_py/logs
 # change the permission set to execute for start app
 chmod +x /data/start_app.sh
+
+# kill all the running processes of previous running application 
+KEYWORD="app"
+
+# Find matching process IDs (excluding grep and this script)
+PIDS=$(ps -ef | grep "$KEYWORD" | grep -v grep | grep -v "$0" | awk '{print $2}')
+
+if [ -z "$PIDS" ]; then
+    echo "No processes found matching keyword: $KEYWORD"
+else
+    echo "Killing the following processes:"
+    echo "$PIDS"
+    # Forcefully kill the processes
+    kill -9 $PIDS
+    echo "Processes killed successfully."
+fi
+
 # Start the application
 bash /data/start_app.sh
