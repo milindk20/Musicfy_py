@@ -35,6 +35,8 @@ chmod +x /data/start_app.sh
 KEYWORD="app"
 
 # Find matching process IDs (excluding grep and this script)
+echo $(ps -ef | grep "$KEYWORD" | grep -v grep )
+
 PIDS=$(ps -ef | grep "$KEYWORD" | grep -v grep | grep -v "$0" | awk '{print $2}')
 
 if [ -z "$PIDS" ]; then
