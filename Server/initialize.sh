@@ -27,9 +27,9 @@ deactivate
 # Copy start_app.sh to /data/
 cp Musicfy_py/Server/start_app.sh /data/
 # Create logs directory
-mkdir /data/Musicfy_py/logs
+mkdir -p /data/Musicfy_py/logs
 # Create Downloads Directory
-mkdir /$(whoami)/Downloads/Music
+mkdir -p /$(whoami)/Downloads/Music
 # change the permission set to execute for start app
 chmod +x /data/start_app.sh
 
