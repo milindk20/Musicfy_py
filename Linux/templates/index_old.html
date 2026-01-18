@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Downloader</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #0039ff, #f53838);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            color: #fff;
+        }
+        h1, h2, h3 {
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        form {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 655px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-width: 400px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            color: #000;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        #message, #csvMessage {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .container {
+            display: flex;
+            flex-direction: column; /* Stack boxes vertically */
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* vertical spacing between the boxes */
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px 0;
+        }
+        .container img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+        .box {
+            width: 100%; /* full width within the container */
+            max-width: 700px; /* limit so it doesn't get too wide on large screens */
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            color: black; /* Ensures contrast */
+        }
+    </style>
+</head>
+<body>
+    <br>    <br>    <br>    <br>
+        <div class="container">
+        <div class="box">
+        <h1 style="color: black;">Download Songs</h1>
+        <form id="songForm" method="POST">
+            <label for="song_name">Enter Song Name:</label>
+            <input type="text" id="song_name" name="song_name" required>
+            <button type="submit">Download</button>
+        </form>
+        <p id="message"></p>
+        </div>
+        
+        <div class="box">
+            <h2 style="color: black;">Upload a CSV with "Track Name" and "Artist Name(s)"</h2>
+        <h3 style="color: black;">Make sure that these 2 columns are there with exact names</h3>
+        <form id="csvForm" method="POST" enctype="multipart/form-data">
+            <label for="csv_file">Upload CSV File:</label>
+            <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+            <button type="submit">Upload and Download</button>
+        </form>
+        <p id="csvMessage" style="color: black;"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('songForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent form from reloading the page
+
+            const songName = document.getElementById('song_name').value;
+            const messageElement = document.getElementById('message');
+
+            // Show "Downloading song: SONG_NAME" message
+            messageElement.innerText = `Downloading song: ${songName}...`;
+
+            try {
+                // Make a POST request to initiate the song download
+                const response = await fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ song_name: songName })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // Automatically trigger the browser to download the file
+                    const downloadUrl = `/download/${encodeURIComponent(result.file_name)}`;
+                    window.location.href = downloadUrl; // Redirect to the download URL
+                    messageElement.innerText = `Your download of "${songName}" is starting...`;
+                } else {
+                    messageElement.innerText = result.message;
+                }
+            } catch (error) {
+                messageElement.innerText = "An error occurred while downloading the song. Please try again.";
+            }
+        });
+
+        document.getElementById('csvForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append('csv_file', document.getElementById('csv_file').files[0]);
+
+            const csvMessageElement = document.getElementById('csvMessage');
+            csvMessageElement.innerText = "Processing CSV and downloading songs...";
+
+            try {
+                const response = await fetch('/', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (Array.isArray(result)) {
+                    result.forEach(song => {
+                        const status = song.status === 'success' ? '✔' : '❌';
+                        csvMessageElement.innerHTML += `<p>${status} ${song.track_name} by ${song.artist_name}: ${song.message}</p>`;
+                    });
+
+                    // Trigger the zip download
+                    const zipUrl = '/download/all-songs.zip';
+                    csvMessageElement.innerHTML += `<p><a href="${zipUrl}" download>Click here to download all songs as a ZIP</a></p>`;
+                } else {
+                    csvMessageElement.innerText = result.message;
+                }
+            } catch (error) {
+                csvMessageElement.innerText = "An error occurred. Please try again.";
+            }
+        });
+    </script>
+</body>
+</html>
