@@ -123,6 +123,7 @@ input:focus {
 
 /* ---------- Buttons ---------- */
 button {
+    margin-top: 10px;
     padding: 14px;
     border-radius: 14px;
     border: none;
@@ -195,10 +196,9 @@ button:disabled { opacity: .5; cursor: not-allowed; }
                 <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8zM5 18h14v2H5z"/></svg>
                 Single Track
             </h2>
-
+            <label>Song title & artist</label>
             <form id="songForm">
-                <label>Song title & artist</label>
-                <input type="text" id="song_name" placeholder="Blinding Lights - The Weeknd" required>
+                <input type="text" id="song_name" placeholder="End of Beginning Song by Joe Keery ‧ 2022" required>
                 <button id="songBtn">Download Song</button>
             </form>
 
@@ -212,9 +212,9 @@ button:disabled { opacity: .5; cursor: not-allowed; }
                 Bulk Download (CSV)
             </h2>
 
-            <small style="color:var(--muted)">
+            <label>
                 Required columns: <b>Track Name</b>, <b>Artist Name(s)</b>
-            </small>
+            </label>
 
             <form id="csvForm" enctype="multipart/form-data">
                 <input type="file" name="csv_file" accept=".csv" required>
@@ -228,7 +228,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
     </div>
 
     <div class="footer">
-        Musicfy • Built for speed ⚡
+        Musicfy • Built for Offine Music ⚡
     </div>
 
 </div>
