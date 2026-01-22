@@ -20,7 +20,7 @@ def download_song(search_query):
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
-                'preferredquality': '192',
+                'preferredquality': '320',
             }],
             'outtmpl': outtmpl,
             'quiet': False,
