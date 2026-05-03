@@ -1,0 +1,11 @@
+#! /bin/bash
+
+cd /data ; rm -rf /data/* ; date
+
+ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+
+apt update; apt install git -y
+cd /data; git clone https://github.com/milindk20/Musicfy_py
+bash /data/Musicfy_py/Server/initialize.sh
+
+tail -f /data/Musicfy_py/logs/logg*
