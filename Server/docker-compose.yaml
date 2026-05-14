@@ -1,0 +1,20 @@
+services:
+  musicfy:
+    image: ubuntu:latest  # Or your preferred base image
+    container_name: musicfy_app
+    volumes:
+      - ./musicfy_data:/data
+    environment:
+      - TZ=Asia/Kolkata
+    working_dir: /data
+    # This block converts your script into a single execution string
+    command: >
+      sh -c "cd /data && rm -rf /data/* && date &&
+      ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime &&
+      apt update && apt install git -y &&
+      git clone https://github.com/milindk20/Musicfy_py /data/Musicfy_py &&
+      bash /data/Musicfy_py/Server/initialize.sh &&
+      tail -f /data/Musicfy_py/logs/logg*"
+    port:
+     - 5000:5000
+    restart: unless-stopped
